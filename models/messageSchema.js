@@ -17,6 +17,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         minLength:[2,"Message must contain at least 2 character!"], 
     },
+    isRead:{
+        type: Boolean,
+        default: false,
+    },
     createdAt:{
         type:Date,
         default: Date.now(),

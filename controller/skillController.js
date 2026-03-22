@@ -61,22 +61,42 @@ export const updateSkill = catchAsyncError(async (req, res, next) => {
   if (!skill) {
     return next(new ErrorHandler("Skill not found!", 404));
   }
-  const { proficiency } = req.body;
-  skill = await Skill.findByIdAndUpdate(
-    id,
-    { proficiency },
-    {
-      new: true,
-      runValidators: true,
-      useFindAndModify: false,
-    }
-  );
+
+  const { title, proficiency } = req.body;
+  const updateData = { title, proficiency };
+
+  // Handle SVG update if a new file is uploaded
+  if (req.files && req.files.svg) {
+    const { svg } = req.files;
+    
+    // Delete old SVG from Cloudinary
+    await cloudinary.uploader.destroy(skill.svg.public_id);
+    
+    // Upload new SVG
+    const cloudinaryResponse = await cloudinary.uploader.upload(
+      svg.tempFilePath,
+      { folder: "PORTFOLIO_SKILLS_SVGS" }
+    );
+    
+    updateData.svg = {
+      public_id: cloudinaryResponse.public_id,
+      url: cloudinaryResponse.secure_url,
+    };
+  }
+
+  skill = await Skill.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
   res.status(200).json({
     success: true,
-    message: "Skill Updated!",
+    message: "Skill Updated Successfully!",
     skill,
   });
 });
+
 
 export const getAllSkills = catchAsyncError(async (req, res, next) => {
   const skills = await Skill.find();

@@ -25,6 +25,7 @@ export const addNewApplication = catchAsyncError(async (req, res, next) => {
       "Cloudinary Error:",
       cloudinaryResponse.error || "Unknown Cloudinary Error"
     );
+     return next(new ErrorHandler("Failed to upload SVG to Cloudinary", 500));
   }
   const softwareApplication = await SoftwareApplication.create({
     name,
@@ -35,7 +36,7 @@ export const addNewApplication = catchAsyncError(async (req, res, next) => {
   });
   res.status(200).json({
     success: true,
-    message: "New Software Appplication Added!",
+    message: "New Software Application Added!",
     softwareApplication,
   });
 });
