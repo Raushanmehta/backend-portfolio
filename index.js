@@ -47,7 +47,13 @@ app.use("/api/v1/message", limiter); // Rate limit contact messages
 
 app.use(
   cors({
-    origin: [process.env.PORTFOLIO_URL, process.env.DASHBOARD_URL],
+    origin: [
+      process.env.PORTFOLIO_URL,
+      process.env.DASHBOARD_URL,
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "http://localhost:5174",
+    ],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
