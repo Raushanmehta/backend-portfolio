@@ -30,21 +30,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Security & Optimization Middlewares
-app.use(helmet()); // Sets various HTTP headers for security
-app.use(mongoSanitize()); // Prevent NoSQL injection
-app.use(compression()); // Compress responses
-app.use(morgan("dev")); // Log requests
-
-// Rate Limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100, // Limit each IP to 100 requests per window
-  message: "Too many requests from this IP, please try again after 15 minutes",
-});
-app.use("/api/v1/user/login", limiter); // Only rate limit login for now
-app.use("/api/v1/message", limiter); // Rate limit contact messages
-
 app.use(
   cors({
     origin: [
@@ -60,6 +45,21 @@ app.use(
     credentials: true,
   })
 );
+
+// Security & Optimization Middlewares
+app.use(helmet()); // Sets various HTTP headers for security
+app.use(mongoSanitize()); // Prevent NoSQL injection
+app.use(compression()); // Compress responses
+app.use(morgan("dev")); // Log requests
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100, // Limit each IP to 100 requests per window
+  message: "Too many requests from this IP, please try again after 15 minutes",
+});
+app.use("/api/v1/user/login", limiter); // Only rate limit login for now
+app.use("/api/v1/message", limiter); // Rate limit contact messages
 
 app.use(cookieParser());
 app.use(express.json());
