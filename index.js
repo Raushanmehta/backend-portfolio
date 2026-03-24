@@ -49,7 +49,9 @@ app.use(
   cors({
     origin: [
       process.env.PORTFOLIO_URL,
+      "https://www.raushanmehta.in",
       process.env.DASHBOARD_URL,
+      "https://www.raushanmehtaadmin.vercel.app",
       "http://localhost:3000",
       "http://localhost:5173",
       "http://localhost:5174",
